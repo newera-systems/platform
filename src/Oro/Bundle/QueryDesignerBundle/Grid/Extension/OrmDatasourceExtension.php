@@ -9,6 +9,7 @@ use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Oro\Bundle\DataGridBundle\Extension\AbstractExtension;
 use Oro\Bundle\QueryDesignerBundle\Grid\QueryDesignerQueryConfiguration;
 use Oro\Bundle\QueryDesignerBundle\QueryDesigner\RestrictionBuilderInterface;
+use Oro\Bundle\QueryDesignerBundle\Utils\QueryOptimizer;
 
 /**
  * The datagrid extension that adds query designer filters to the grid datasource.
@@ -61,6 +62,9 @@ class OrmDatasourceExtension extends AbstractExtension
         $filters = $config->offsetGetByPath(QueryDesignerQueryConfiguration::FILTERS);
         $this->restrictionBuilder->buildRestrictions($filters, $ds);
         $this->appliedFor[$gridName . $parametersKey] = true;
+
+        (new QueryOptimizer())->filterQuery($qb);
+
     }
 
     /**
