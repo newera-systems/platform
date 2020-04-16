@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\FilterBundle\Datasource\Orm\OrmFilterDatasourceAdapter;
 use Oro\Bundle\QueryDesignerBundle\Model\ExpressionBuilder;
 use Oro\Bundle\QueryDesignerBundle\Model\Restriction;
+use Oro\Bundle\QueryDesignerBundle\Utils\QueryOptimizer;
 
 /**
  * Represents ORM data source adapter which allows to combine restrictions in groups,
@@ -50,6 +51,8 @@ class GroupingOrmFilterDatasourceAdapter extends OrmFilterDatasourceAdapter
      */
     public function applyRestrictions()
     {
+        (new QueryOptimizer())->filterQuery($this->qb);
+
         $this->expressionBuilder->applyRestrictions($this->qb);
     }
 }
