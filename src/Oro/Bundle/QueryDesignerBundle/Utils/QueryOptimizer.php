@@ -30,14 +30,6 @@ class QueryOptimizer
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function hasLogger(): bool
-    {
-        return $this->logger && !$this->logger instanceof NullLogger;
-    }
-
     private static function isJoinUsed(Join $join, QueryBuilder $qb): bool
     {
         if (!self::isLeftJoin($join)) {
