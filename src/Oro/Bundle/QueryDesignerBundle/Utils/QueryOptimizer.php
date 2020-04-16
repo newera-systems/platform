@@ -11,34 +11,12 @@ use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 
 class QueryOptimizer
 {
-
-    /**
-     * @var LoggerInterface\
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger = null)
-    {
-        if (!$logger) {
-            $logger = new NullLogger();
-        }
-
-        $this->logger = $logger;
-    }
-
     public function filterQuery(QueryBuilder $qb): void
     {
-        $originalQuery = '';
-        if ($this->hasLogger()) {
-            $originalQuery = $qb->getQuery()->getSQL();
-        }
-
         $joins = $qb->getDQLPart('join');
         $qb->resetDQLPart('join');
 
@@ -48,16 +26,6 @@ class QueryOptimizer
                 if (self::isJoinUsed($join, $qb)) {
                     self::addJoin($qb, $join);
                 }
-            }
-        }
-
-        if ($this->hasLogger()) {
-            $newQuery = $qb->getQuery()->getSQL();
-
-            if ($originalQuery !== $newQuery) {
-                $this->logger->notice(
-                    sprintf("DQL Optimized : \n   ORIGINAL : %s\n   NEW      : %s", $originalQuery, $newQuery)
-                );
             }
         }
     }
